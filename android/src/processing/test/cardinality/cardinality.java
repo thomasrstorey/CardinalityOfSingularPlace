@@ -1,9 +1,34 @@
-import damkjer.ocd.*;
-import controlP5.*;
-import ketai.sensors.*;
-import android.view.WindowManager;
-import android.view.View;
-import android.os.Bundle;
+package processing.test.cardinality;
+
+import processing.core.*; 
+import processing.data.*; 
+import processing.event.*; 
+import processing.opengl.*; 
+
+import damkjer.ocd.*; 
+import controlP5.*; 
+import ketai.sensors.*; 
+import android.view.WindowManager; 
+import android.view.View; 
+import android.os.Bundle; 
+
+import java.util.HashMap; 
+import java.util.ArrayList; 
+import java.io.File; 
+import java.io.BufferedReader; 
+import java.io.PrintWriter; 
+import java.io.InputStream; 
+import java.io.OutputStream; 
+import java.io.IOException; 
+
+public class cardinality extends PApplet {
+
+
+
+
+
+
+
 
 KetaiSensor sensor;
 KetaiLocation location;
@@ -34,8 +59,8 @@ boolean setup;
 int sample = 5;
 
 
-void setup(){
-  size(displayWidth, displayHeight, P3D);
+public void setup(){
+ 
   orientation(PORTRAIT);
   setup = false;
   totalx = 0;
@@ -48,7 +73,7 @@ void setup(){
   pre = true;
   cp5 = new ControlP5(this);
   robotolite = createFont("Roboto-Thin.ttf", displayHeight/40, true);
-  robotobold = createFont("Roboto-MediumItalic.ttf", displayHeight/26.6667, true);
+  robotobold = createFont("Roboto-MediumItalic.ttf", displayHeight/26.6667f, true);
   rotation = new PVector(0,0,0);
   protation = new PVector(0,0,0);
   rotations = new PVector[sample];
@@ -71,7 +96,7 @@ void setup(){
      origins[i][j] = new PVector(i*scale, 0 , j*scale);
     }
   }
-  cam = new Camera(this, 0.0, -400.0, 0.0, (origins[gridSize/2][gridSize/2].x), -400, -(origins[gridSize/2][gridSize/2].z)+1, 0.0, -1.0, 0.0,
+  cam = new Camera(this, 0.0f, -400.0f, 0.0f, (origins[gridSize/2][gridSize/2].x), -400, -(origins[gridSize/2][gridSize/2].z)+1, 0.0f, -1.0f, 0.0f,
   1, 10000);
   location = new KetaiLocation(this);
   title = cp5.addTextlabel("title")
@@ -88,14 +113,14 @@ void setup(){
   .setFont(robotolite);
 }
 
-void onCreate(Bundle bundle) 
+public void onCreate(Bundle bundle) 
 {
   super.onCreate(bundle);
   // fix so screen doesn't go to sleep when app is active
   getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 }
 
-void draw(){
+public void draw(){
   if(pre){
     background(0,0,255);
     camera();
@@ -108,8 +133,8 @@ void draw(){
       hint(ENABLE_DEPTH_TEST);
 
       
-      background(clon,clat/3.0,127);  
-      if(abs(rotation.x - protation.x) < 300.0 && abs(rotation.y - protation.y) < 300){
+      background(clon,clat/3.0f,127);  
+      if(abs(rotation.x - protation.x) < 300.0f && abs(rotation.y - protation.y) < 300){
           if(index == 0){
           totalx = totalx - rotations[sample-1].x;
           totaly = totaly - rotations[sample-1].y;
@@ -163,7 +188,7 @@ void draw(){
   }
 }
 
-void onOrientationEvent(float x, float y, float z){
+public void onOrientationEvent(float x, float y, float z){
    protation.x = rotation.x;
    protation.y = rotation.y;
    protation.z = rotation.z;
@@ -172,48 +197,48 @@ void onOrientationEvent(float x, float y, float z){
    rotation.z = z;
 }
 
-void drawLine(float _x, float _y, float _z, float row, float col){
+public void drawLine(float _x, float _y, float _z, float row, float col){
   float x = _x;
-  float y = map(noise(row, col), 0.0, 1.0, -yscale, yscale) + _y;
+  float y = map(noise(row, col), 0.0f, 1.0f, -yscale, yscale) + _y;
   float z = _z;
-  float off = 0.2;
+  float off = 0.2f;
   beginShape(LINES); 
   for(int it = 0; it < 5; it++){
     vertex(x, y, z);
     row += off;
-    y = map(noise(row, col), 0.0, 1.0, -yscale, yscale) + _y;
+    y = map(noise(row, col), 0.0f, 1.0f, -yscale, yscale) + _y;
     x += scale/5;
-    float cy = map(y, yscale, -yscale, 0.0, 255.0);
+    float cy = map(y, yscale, -yscale, 0.0f, 255.0f);
     stroke(clon, clat, cy);
     vertex(x, y, z);
   }
   endShape();
 }
 
-void drawLineAlt(float _x, float _y, float _z, float row, float col){
+public void drawLineAlt(float _x, float _y, float _z, float row, float col){
   float x = _x;
-  float y = map(noise(row, col), 0.0, 1.0, -yscale, yscale) + _y;
+  float y = map(noise(row, col), 0.0f, 1.0f, -yscale, yscale) + _y;
   float z = _z;
-  float off = 0.2;
+  float off = 0.2f;
   
   beginShape(LINES); 
   for(int it = 0; it < 5; it++){
     vertex(x, y, z);
     col += off;
-    y = map(noise(row, col), 0.0, 1.0, -yscale, yscale) + _y;
+    y = map(noise(row, col), 0.0f, 1.0f, -yscale, yscale) + _y;
     z += scale/5;
-    float cy = map(y, yscale, -yscale, 0.0, 255.0);
+    float cy = map(y, yscale, -yscale, 0.0f, 255.0f);
     stroke(clon, clat, cy);
     vertex(x, y, z);
   }
   endShape();
 }
 
-void stop(){
+public void stop(){
  sensor.stop(); 
 }
 
-void mouseReleased(){
+public void mouseReleased(){
   if(pre){
     pre = false;
     title.setVisible(false);
@@ -236,22 +261,27 @@ void mouseReleased(){
   }
 }
 
-void onLocationEvent(double _latitude, double _longitude, double _altitude){
+public void onLocationEvent(double _latitude, double _longitude, double _altitude){
   lon = _longitude;
   lat = _latitude;
-  clon = map((float)lon, -180.0, 180.0, 0.0, 255.0);
-  clat = map((float)lat, -90.0, 90.0, 0.0, 255.0);
+  clon = map((float)lon, -180.0f, 180.0f, 0.0f, 255.0f);
+  clat = map((float)lat, -90.0f, 90.0f, 0.0f, 255.0f);
   if(!pre)coords.setText((float)lat + "\n" + (float)lon + "\n" + magneticField.x + " " + magneticField.y + " " + magneticField.z);
 }
 
-void onMagneticFieldEvent(float x, float y, float z, long time, int accuracy)
+public void onMagneticFieldEvent(float x, float y, float z, long time, int accuracy)
 {
   float _x = floor(x);
   float _y = floor(y);
   float _z = floor(z);
   magneticField.set(_x, _y, _z);
   if(pre){
-    compRot = atan2(map(x, -31.5, 31.5, -1.0, 1.0), map(z, -31.5, 31.5, -1.0, 1.0));
+    compRot = atan2(map(x, -31.5f, 31.5f, -1.0f, 1.0f), map(z, -31.5f, 31.5f, -1.0f, 1.0f));
   }
   if(!pre)coords.setText((float)lat + "\n" + (float)lon + "\n" + magneticField.x + " " + magneticField.y + " " + magneticField.z);
+}
+
+  public int sketchWidth() { return displayWidth; }
+  public int sketchHeight() { return displayHeight; }
+  public String sketchRenderer() { return P3D; }
 }
